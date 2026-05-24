@@ -1,18 +1,12 @@
-require("dotenv").config();
-const app = require("./app");
-const connectDB = require("./src/config/db");
-const env = require("./src/config/env");
+import "./src/config/loadEnv.js"
 
-const startServer = async () => {
-  // First connect to DB, then start server
-  // Never start listening if DB connection fails
-  await connectDB();
+import app from "./app.js";
+import connectDB from "./src/config/db.js";
+import env from "./src/config/env.js";
 
+connectDB().then(() => {
   app.listen(env.PORT, () => {
-    console.log(`🚀 Server running on port ${env.PORT}`);
-    console.log(`📍 http://localhost:${env.PORT}`);
-    console.log(`🌍 Environment: ${env.NODE_ENV}`);
-  });
-};
+  console.log(`server running on port ${env.PORT}`);
+});
+})
 
-startServer();
