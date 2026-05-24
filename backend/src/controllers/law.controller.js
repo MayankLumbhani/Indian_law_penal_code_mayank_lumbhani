@@ -1,4 +1,4 @@
-import { getAllLaws } from "../services/law.service.js";
+import { getAllLaws, getLawwById } from "../services/law.service.js";
 
 export const fetchAllLaws = async (req, res) => {
 
@@ -11,3 +11,22 @@ export const fetchAllLaws = async (req, res) => {
     });
 
 } 
+
+export const fetchLawById = async (req, res) => {
+
+    const law = await getLawwById(req.params.id);
+
+    if(!law) {
+        return res.status(404).json({
+            success : false,
+            message : "Law not found",
+        });
+    }
+
+    res.status(200).json({
+        success : true,
+        message : "Law fetched successfully",
+        data : law,
+    });
+
+};

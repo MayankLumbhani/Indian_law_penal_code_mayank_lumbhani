@@ -1,5 +1,6 @@
 import Law from "../models/law.model.js";
 import getPagination from "../utils/pagination.js";
+import mongoose from "mongoose";
 
 export const getAllLaws = async (query) => {
 
@@ -25,3 +26,13 @@ export const getAllLaws = async (query) => {
     return laws;
     
 };
+
+export const getLawwById = async (id) => {
+
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if(!isValidId){
+        return null;
+    } 
+    const law = await Law.findById(id);
+    return law;
+}
