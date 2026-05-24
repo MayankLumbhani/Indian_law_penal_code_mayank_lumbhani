@@ -1,5 +1,8 @@
-const express = require("express");
-const router = express.Router();
-
+import { Router } from "express";
+import { fetchAllLaws } from "../controllers/law.controller.js";
 // Routes will be added here
-module.exports = router;
+const router = Router();
+
+router.get("/",fetchAllLaws);
+
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const lawSchema = new mongoose.Schema(
   {
@@ -120,4 +120,4 @@ lawSchema.index(
 
 const Law = mongoose.model("Law", lawSchema);
 
-module.exports = Law;
+export default Law;
