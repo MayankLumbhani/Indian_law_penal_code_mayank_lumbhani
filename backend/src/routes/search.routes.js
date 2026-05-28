@@ -1,4 +1,9 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+import { searchLawsByKeyword } from "../controllers/search.controller.js";
 
-module.exports = router;
+const router = Router();
+
+// GET /api/v1/search/laws?q=murder
+router.get("/laws", searchLawsByKeyword);
+
+export default router;
