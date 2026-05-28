@@ -72,3 +72,66 @@ export const updateLaw = async (id, body) => {
     return law;
 
 };
+
+export const deleteLaw = async (id) => {
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) return null;
+
+  // we are not deleting — just setting isDeleted to true
+  const law = await Law.findByIdAndUpdate(
+    id,
+    { $set: { isDeleted: true } },
+    { returnDocument: "after" }
+  );
+
+  return law;
+};
+
+export const checkLawExists = async (id) => {
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) return false;
+
+  // findById returns the document if found, null if not
+  // !! converts it to true or false
+  const law = await Law.findById(id);
+  return !!law;
+};
+
+export const getRecentLaws = async (query) => {
+  const { page, limit } = query;
+  const { pageNum, limitNum, skip } = getPagination(page, limit);
+
+  // -1 means descending order — newest first
+  const laws = await Law.find({ isDeleted: false })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limitNum);
+
+  const total = await Law.countDocuments({ isDeleted: false });
+
+  return {
+    total,
+    page: pageNum,
+    limit: limitNum,
+    totalPages: Math.ceil(total / limitNum),
+    data: laws,
+  };
+};
+
+export const getArchivedLaws = async () => {
+  const laws = await Law.find({ isDeleted: true }).sort({ updatedAt: -1 });
+  return laws;
+};
+
+export const archiveLaw = async (id) => {
+  const isValidId = mongoose.Types.ObjectId.isValid(id);
+  if (!isValidId) return null;
+
+  const law = await Law.findByIdAndUpdate(
+    id,
+    { $set: { isDeleted: true } },
+    { returnDocument: "after" }
+  );
+
+  return law;
+};

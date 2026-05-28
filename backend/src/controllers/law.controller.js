@@ -1,4 +1,4 @@
-import { getAllLaws, getLawwById, createLaw, replaceLaw, updateLaw } from "../services/law.service.js";
+import { getAllLaws, getLawwById, createLaw, replaceLaw, updateLaw, deleteLaw, checkLawExists, getRecentLaws, getArchivedLaws, archiveLaw } from "../services/law.service.js";
 
 export const fetchAllLaws = async (req, res) => {
 
@@ -77,3 +77,67 @@ export const updateLawById = async (req, res) => {
     });
 
 }
+
+export const deleteLawById = async (req, res) => {
+  const law = await deleteLaw(req.params.id);
+
+  if (!law) {
+    return res.status(404).json({
+      success: false,
+      message: "Law not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Law deleted successfully",
+    data: law,
+  });
+};
+
+export const lawExists = async (req, res) => {
+  const exists = await checkLawExists(req.params.id);
+
+  res.status(200).json({
+    success: true,
+    message: exists ? "Law exists" : "Law does not exist",
+    data: { exists },
+  });
+};
+
+export const fetchRecentLaws = async (req, res) => {
+  const result = await getRecentLaws(req.query);
+
+  res.status(200).json({
+    success: true,
+    message: "Recent laws fetched successfully",
+    data: result,
+  });
+};
+
+export const fetchArchivedLaws = async (req, res) => {
+  const laws = await getArchivedLaws();
+
+  res.status(200).json({
+    success: true,
+    message: "Archived laws fetched successfully",
+    data: laws,
+  });
+};
+
+export const archiveLawById = async (req, res) => {
+  const law = await archiveLaw(req.params.id);
+
+  if (!law) {
+    return res.status(404).json({
+      success: false,
+      message: "Law not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Law archived successfully",
+    data: law,
+  });
+};
