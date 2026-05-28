@@ -1,4 +1,4 @@
-import { getAllLaws, getLawwById, createLaw, replaceLaw, updateLaw, deleteLaw, checkLawExists, getRecentLaws, getArchivedLaws, archiveLaw } from "../services/law.service.js";
+import { getAllLaws, getLawwById, createLaw, replaceLaw, updateLaw, deleteLaw, checkLawExists, getRecentLaws, getArchivedLaws, archiveLaw, restoreLaw, getLawHistory, getLawSummary, getRandomLaw, getTrendingLaws } from "../services/law.service.js";
 
 export const fetchAllLaws = async (req, res) => {
 
@@ -139,5 +139,76 @@ export const archiveLawById = async (req, res) => {
     success: true,
     message: "Law archived successfully",
     data: law,
+  });
+};
+
+export const restoreLawById = async (req, res) => {
+  const law = await restoreLaw(req.params.id);
+
+  if (!law) {
+    return res.status(404).json({
+      success: false,
+      message: "Law not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Law restored successfully",
+    data: law,
+  });
+};
+
+export const getLawHistoryById = async (req, res) => {
+  const law = await getLawHistory(req.params.id);
+
+  if (!law) {
+    return res.status(404).json({
+      success: false,
+      message: "Law not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Law history fetched successfully",
+    data: law,
+  });
+};
+
+export const getLawSummaryById = async (req, res) => {
+  const law = await getLawSummary(req.params.id);
+
+  if (!law) {
+    return res.status(404).json({
+      success: false,
+      message: "Law not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Law summary fetched successfully",
+    data: law,
+  });
+};
+
+export const fetchRandomLaw = async (req, res) => {
+  const law = await getRandomLaw();
+
+  res.status(200).json({
+    success: true,
+    message: "Random law fetched successfully",
+    data: law,
+  });
+};
+
+export const fetchTrendingLaws = async (req, res) => {
+  const laws = await getTrendingLaws();
+
+  res.status(200).json({
+    success: true,
+    message: "Trending laws fetched successfully",
+    data: laws,
   });
 };

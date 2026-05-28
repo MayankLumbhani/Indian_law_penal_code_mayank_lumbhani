@@ -10,6 +10,11 @@ import {
   fetchRecentLaws,
   fetchArchivedLaws,
   archiveLawById,
+  restoreLawById,
+  getLawHistoryById,
+  getLawSummaryById,
+  fetchRandomLaw,
+  fetchTrendingLaws,
 } from "../controllers/law.controller.js";
 
 const router = Router();
@@ -26,8 +31,20 @@ router.get("/recent", fetchRecentLaws);
 // GET /api/v1/laws/archived
 router.get("/archived", fetchArchivedLaws);
 
+// GET /api/v1/laws/random
+router.get("/random", fetchRandomLaw);
+
+// GET /api/v1/laws/trending
+router.get("/trending", fetchTrendingLaws);
+
 // GET /api/v1/laws/:id
 router.get("/:id", fetchLawById);
+
+// GET /api/v1/laws/:id/history
+router.get("/:id/history", getLawHistoryById);
+
+// GET /api/v1/laws/:id/summary
+router.get("/:id/summary", getLawSummaryById);
 
 // POST /api/v1/laws
 router.post("/", addLaw);
@@ -40,6 +57,9 @@ router.patch("/:id", updateLawById);
 
 // PATCH /api/v1/laws/:id/archive
 router.patch("/:id/archive", archiveLawById);
+
+// PATCH /api/v1/laws/:id/restore
+router.patch("/:id/restore", restoreLawById);
 
 // DELETE /api/v1/laws/:id
 router.delete("/:id", deleteLawById);
