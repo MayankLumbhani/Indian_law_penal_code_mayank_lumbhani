@@ -212,3 +212,4 @@ export const fetchTrendingLaws = async (req, res) => {
     data: laws,
   });
 };
+

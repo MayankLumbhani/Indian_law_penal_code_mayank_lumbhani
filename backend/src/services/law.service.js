@@ -77,7 +77,6 @@ export const deleteLaw = async (id) => {
   const isValidId = mongoose.Types.ObjectId.isValid(id);
   if (!isValidId) return null;
 
-  // we are not deleting — just setting isDeleted to true
   const law = await Law.findByIdAndUpdate(
     id,
     { $set: { isDeleted: true } },
@@ -91,8 +90,6 @@ export const checkLawExists = async (id) => {
   const isValidId = mongoose.Types.ObjectId.isValid(id);
   if (!isValidId) return false;
 
-  // findById returns the document if found, null if not
-  // !! converts it to true or false
   const law = await Law.findById(id);
   return !!law;
 };
@@ -101,7 +98,6 @@ export const getRecentLaws = async (query) => {
   const { page, limit } = query;
   const { pageNum, limitNum, skip } = getPagination(page, limit);
 
-  // -1 means descending order — newest first
   const laws = await Law.find({ isDeleted: false })
     .sort({ createdAt: -1 })
     .skip(skip)
@@ -136,12 +132,10 @@ export const archiveLaw = async (id) => {
   return law;
 };
 
-// Route 11 - restore archived law
 export const restoreLaw = async (id) => {
   const isValidId = mongoose.Types.ObjectId.isValid(id);
   if (!isValidId) return null;
 
-  // set isDeleted back to false to restore the document
   const law = await Law.findByIdAndUpdate(
     id,
     { $set: { isDeleted: false } },
