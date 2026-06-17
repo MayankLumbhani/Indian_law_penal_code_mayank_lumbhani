@@ -2,30 +2,13 @@ import Law from "../models/law.model.js";
 import getPagination from "../utils/pagination.js";
 import mongoose from "mongoose";
 
-export const getAllLaws = async (query) => {
-
-    const { page, limit } = query;
-
-    if (page || limit) {
-        const { pageNum, limitNum, skip } = getPagination(page, limit);
-
-        const laws = await Law.find().skip(skip).limit(limitNum);
-
-        const total = await Law.countDocuments();
-
-        return {
-            total,
-            page: pageNum,
-            limit: limitNum,
-            totalPages: Math.ceil(total / limitNum),
-            data: laws,
-        };
-    }
-
-    const laws = await Law.find();
-    return laws;
-    
+export const getAllLaws = async (page, limit) => {
+  const { pageNum, limitNum, skip } = getPagination(page, limit);
+  const laws = await Law.find({ isDeleted: false }).skip(skip).limit(limitNum);
+  const total = await Law.countDocuments({ isDeleted: false });
+  return { laws, total, page: pageNum, limit: limitNum, totalPages: Math.ceil(total / limitNum) };
 };
+
 
 export const getLawwById = async (id) => {
 
@@ -94,30 +77,22 @@ export const checkLawExists = async (id) => {
   return !!law;
 };
 
-export const getRecentLaws = async (query) => {
-  const { page, limit } = query;
+// Route 2 - get recent laws (with pagination)
+export const getRecentLaws = async (page, limit) => {
   const { pageNum, limitNum, skip } = getPagination(page, limit);
-
-  const laws = await Law.find({ isDeleted: false })
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limitNum);
-
+  const laws = await Law.find({ isDeleted: false }).sort({ createdAt: -1 }).skip(skip).limit(limitNum);
   const total = await Law.countDocuments({ isDeleted: false });
-
-  return {
-    total,
-    page: pageNum,
-    limit: limitNum,
-    totalPages: Math.ceil(total / limitNum),
-    data: laws,
-  };
+  return { laws, total, page: pageNum, limit: limitNum, totalPages: Math.ceil(total / limitNum) };
 };
 
-export const getArchivedLaws = async () => {
-  const laws = await Law.find({ isDeleted: true }).sort({ updatedAt: -1 });
-  return laws;
+
+export const getArchivedLaws = async (page, limit) => {
+  const { pageNum, limitNum, skip } = getPagination(page, limit);
+  const laws = await Law.find({ isDeleted: true }).skip(skip).limit(limitNum);
+  const total = await Law.countDocuments({ isDeleted: true });
+  return { laws, total, page: pageNum, limit: limitNum, totalPages: Math.ceil(total / limitNum) };
 };
+
 
 export const archiveLaw = async (id) => {
   const isValidId = mongoose.Types.ObjectId.isValid(id);
@@ -182,11 +157,9 @@ export const getRandomLaw = async () => {
 };
 
 // Route 15 - get trending laws
-export const getTrendingLaws = async () => {
-  // trending means highest views first
-  const laws = await Law.find({ isDeleted: false })
-    .sort({ views: -1 })
-    .limit(10);
-
-  return laws;
+export const getTrendingLaws = async (page, limit) => {
+  const { pageNum, limitNum, skip } = getPagination(page, limit);
+  const laws = await Law.find({ isDeleted: false }).sort({ views: -1 }).skip(skip).limit(limitNum);
+  const total = await Law.countDocuments({ isDeleted: false });
+  return { laws, total, page: pageNum, limit: limitNum, totalPages: Math.ceil(total / limitNum) };
 };

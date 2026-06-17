@@ -1,16 +1,41 @@
 import { getAllLaws, getLawwById, createLaw, replaceLaw, updateLaw, deleteLaw, checkLawExists, getRecentLaws, getArchivedLaws, archiveLaw, restoreLaw, getLawHistory, getLawSummary, getRandomLaw, getTrendingLaws } from "../services/law.service.js";
 
 export const fetchAllLaws = async (req, res) => {
-
-    const result = await getAllLaws(req.query);
-
+  try {
+    const { page, limit } = req.query;
+    const data = await getAllLaws(page, limit);
     res.status(200).json({
-        success: true,
-        message: "Law fetched successfully",
-        data: result,
+      success: true,
+      message: "Laws fetched successfully",
+      data,
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
 
-}
+export const fetchRecentLaws = async (req, res) => {
+  try {
+    const { page, limit } = req.query;
+    const data = await getRecentLaws(page, limit);
+    res.status(200).json({
+      success: true,
+      message: "Recent laws fetched successfully",
+      data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
 
 export const fetchLawById = async (req, res) => {
 
