@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { validateCreateLaw, validateUpdateLaw } from "../middlewares/validate.middleware.js";
+import { globalLimiter } from "../middlewares/rateLimit.middleware.js";
 import {
   fetchAllLaws,
   fetchLawById,
@@ -20,7 +22,7 @@ import {
 const router = Router();
 
 // GET /api/v1/laws
-router.get("/", fetchAllLaws);
+router.get("/", globalLimiter, fetchAllLaws);
 
 // GET /api/v1/laws/exists/:id
 router.get("/exists/:id", lawExists);
@@ -47,10 +49,10 @@ router.get("/:id/history", getLawHistoryById);
 router.get("/:id/summary", getLawSummaryById);
 
 // POST /api/v1/laws
-router.post("/", addLaw);
+router.post("/", validateCreateLaw, addLaw);
 
 // PUT /api/v1/laws/:id
-router.put("/:id", replaceLawById);
+router.put("/:id", validateUpdateLaw, replaceLawById);
 
 // PATCH /api/v1/laws/:id
 router.patch("/:id", updateLawById);
