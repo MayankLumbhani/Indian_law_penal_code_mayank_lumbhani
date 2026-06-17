@@ -8,6 +8,7 @@ import statsRoutes from "./stats.routes.js";
 import authRoutes from "./auth.routes.js";
 import jwtRoutes from "./jwt.routes.js";
 import middlewareRoutes from "./middleware.routes.js";
+import adminRoutes from "./admin.routes.js";
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use("/stats", statsRoutes);
 router.use("/auth", authRoutes);
 router.use("/jwt", jwtRoutes);
 router.use("/middleware", middlewareRoutes);
+router.use("/admin", adminRoutes);
 
 export default router;
